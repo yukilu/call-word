@@ -1,0 +1,17 @@
+{
+  "name": "call-word-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "build": "node build.mjs",
+    "start": "cross-env NODE_ENV=production node index.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "esbuild": "^0.28.2"
+  }
+}

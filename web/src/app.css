@@ -1,0 +1,389 @@
+:root {
+  --bg: #f0f2f5;
+  --card: #fff;
+  --border: #f0f0f0;
+  --muted: #8c8c8c;
+  --accent: #4f6bf0;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------- 头部 ---------- */
+
+.app-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+/* ---------- 工具栏（随 header 固定） ---------- */
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---------- 卡片网格 ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 0 32px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.load-more-end {
+  text-align: center;
+  padding: 16px 0 32px;
+}
+
+.prompt-card {
+  height: 100%;
+  display: flex;
+}
+
+.prompt-card > .ant-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-content {
+  background: #fafafa;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.card-content.clamp {
+  max-height: 144px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-content.clamp::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(transparent, #fafafa);
+}
+
+/* 点击文本域复制 */
+.card-content-copy {
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.card-content-copy:hover {
+  border-color: var(--accent);
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+}
+
+.card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: 1px dashed var(--border);
+}
+
+/* ---------- 管理页 ---------- */
+
+.manage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  padding-bottom: 32px;
+}
+
+.manage-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition: box-shadow 0.2s;
+}
+
+.manage-card:hover {
+  box-shadow: var(--shadow);
+}
+
+.manage-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.manage-card-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.manage-card-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.manage-card-handle {
+  cursor: grab;
+  color: #bfbfbf;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.manage-card-handle:active {
+  cursor: grabbing;
+}
+
+.manage-card-dragging {
+  opacity: 0.4;
+}
+
+.manage-card-over {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(79, 107, 240, 0.2);
+}
+
+/* ---------- Table 拖拽行 ---------- */
+
+.table-row-dragging {
+  opacity: 0.4;
+}
+
+/* 拖拽插入位置指示线：显示在该行上方 */
+.table-row-insert-above > td {
+  background: rgba(79, 107, 240, 0.05) !important;
+  box-shadow: inset 0 2px 0 0 var(--accent);
+}
+
+/* 去掉排序列的高亮背景 */
+.ant-table-cell-sort {
+  background: transparent !important;
+}
+.ant-table-thead th.ant-table-column-sort {
+  background: transparent !important;
+}
+
+/* ---------- 全文弹窗 ---------- */
+
+.full-text-view {
+  background: #fafafa;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.empty-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 0;
+}
+
+/* ---------- 登录页 ---------- */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg);
+}
+
+.login-card {
+  width: 400px;
+  max-width: 90vw;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+}
+
+/* ---------- 表单（Modal 内） ---------- */
+
+.prompt-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-row-top {
+  align-items: flex-start;
+}
+
+.form-label {
+  flex-shrink: 0;
+  width: 48px;
+  text-align: right;
+  color: var(--muted);
+}
+
+.tag-picker {
+  flex: 1;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.tag-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- 标签维护卡片网格 ---------- */
+
+.manage-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.manage-card-item {
+  position: relative;
+}
+
+.manage-card .ant-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manage-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.manage-card-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.manage-card-move {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.manage-card {
+  cursor: pointer;
+}
+
+.manage-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.manage-card-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+  padding: 48px 0;
+}

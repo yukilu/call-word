@@ -1,0 +1,24 @@
+{
+  "name": "call-word",
+  "version": "1.0.0",
+  "private": true,
+  "description": "文生图 / 文生视频 / 图生视频 提示词收藏",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev -w server\" \"npm run dev -w web\"",
+    "dev:server": "npm run dev -w server",
+    "dev:web": "npm run dev -w web",
+    "build": "npm run build -w web && npm run build -w server",
+    "start": "cross-env NODE_ENV=production node release/index.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "cross-env": "^10.1.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
