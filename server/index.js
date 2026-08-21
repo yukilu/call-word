@@ -519,6 +519,11 @@ app.get('/api/prompts', auth, (req, res) => {
 app.post('/api/prompts', auth, (req, res) => {
   const parsed = parseBody(req.userId, req.body);
   if (parsed.error) return res.status(400).json({ error: parsed.error });
+  // 链接唯一性校验：非空时不能与已有重复
+  if (parsed.data.url) {
+    const dup = db.prepare('SELECT id, title FROM prompts WHERE user_id = ? AND url = ?').get(req.userId, parsed.data.url);
+    if (dup) return res.status(409).json({ error: `链接已存在（提示词「${dup.title}」），不能重复添加` });
+  }
   const { lastInsertRowid } = db
     .prepare('INSERT INTO prompts (user_id, title, content, type, tags, model_id, model_refs, source_id, url, note, favorite) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
     .run(req.userId, parsed.data.title, parsed.data.content, parsed.data.type, parsed.data.tags, parsed.data.model_id, parsed.data.model_refs, parsed.data.source_id, parsed.data.url, parsed.data.note, parsed.data.favorite);
@@ -531,6 +536,11 @@ app.put('/api/prompts/:id', auth, (req, res) => {
   if (!getPrompt(req.userId, id)) return res.status(404).json({ error: '提示词不存在' });
   const parsed = parseBody(req.userId, req.body);
   if (parsed.error) return res.status(400).json({ error: parsed.error });
+  // 链接唯一性校验：非空时不能与其他提示词重复（排除自身）
+  if (parsed.data.url) {
+    const dup = db.prepare('SELECT id, title FROM prompts WHERE user_id = ? AND url = ? AND id != ?').get(req.userId, parsed.data.url, id);
+    if (dup) return res.status(409).json({ error: `链接已存在（提示词「${dup.title}」），不能重复添加` });
+  }
   db.prepare(
     `UPDATE prompts
         SET title = ?, content = ?, type = ?, tags = ?, model_id = ?, model_refs = ?, source_id = ?, url = ?, note = ?, favorite = ?,

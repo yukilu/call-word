@@ -127,7 +127,10 @@ function HomePage({ username, onLogout }: { username: string; onLogout: () => vo
         (!favOnly || p.favorite) &&
         (tagFilter.length === 0 || p.tags.some((id) => tagFilter.includes(id))) &&
         (modelFilter === '' || p.model_id === modelFilter) &&
-        (!kw || p.title.toLowerCase().includes(kw) || p.note.toLowerCase().includes(kw)),
+        (!kw ||
+          p.title.toLowerCase().includes(kw) ||
+          p.note.toLowerCase().includes(kw) ||
+          p.url.toLowerCase().includes(kw)),
     );
   }, [items, keyword, typeFilter, tagFilter, modelFilter, favOnly]);
 
@@ -263,7 +266,7 @@ function HomePage({ username, onLogout }: { username: string; onLogout: () => vo
               </Button>
               <Input
                 style={{ width: 280 }}
-                placeholder="搜索标题、备注…"
+                placeholder="搜索标题、备注、链接…"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 allowClear

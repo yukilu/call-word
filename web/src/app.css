@@ -119,7 +119,8 @@ body {
   font-size: 13px;
   line-height: 1.6;
   white-space: pre-wrap;
-  word-break: break-word;
+  word-break: break-all;
+  overflow-wrap: anywhere;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   max-height: 400px;
   overflow-y: auto;
@@ -156,6 +157,24 @@ body {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 14px;
+}
+
+.card-note {
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.card-model-name {
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.card-ref-tag {
+  max-width: 100% !important;
+  white-space: normal !important;
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+  height: auto !important;
 }
 
 .card-foot {
@@ -262,7 +281,8 @@ body {
   font-size: 14px;
   line-height: 1.8;
   white-space: pre-wrap;
-  word-break: break-word;
+  word-break: break-all;
+  overflow-wrap: anywhere;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   max-height: 60vh;
   overflow-y: auto;

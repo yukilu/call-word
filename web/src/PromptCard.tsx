@@ -90,7 +90,7 @@ export function PromptCard({ prompt, tagMap, modelMap, modelRefMap, sourceMap, o
         {modelName && (
           <Space size={4}>
             <Text type="secondary" style={{ fontSize: 12 }}>模型：</Text>
-            <Text style={{ fontSize: 12 }} title={modelName}>{modelName}</Text>
+            <Text style={{ fontSize: 12 }} title={modelName} className="card-model-name">{modelName}</Text>
           </Space>
         )}
         {tagNames.length > 0 && (
@@ -109,6 +109,7 @@ export function PromptCard({ prompt, tagMap, modelMap, modelRefMap, sourceMap, o
                 <Tag
                   key={ref.id}
                   color={REF_TYPE_COLOR[ref.ref_type]}
+                  className="card-ref-tag"
                   style={{
                     margin: 0,
                     cursor: ref.url ? 'pointer' : 'default',
@@ -132,7 +133,7 @@ export function PromptCard({ prompt, tagMap, modelMap, modelRefMap, sourceMap, o
       </div>
 
       {prompt.note && (
-        <Paragraph type="secondary" style={{ margin: 0, fontSize: 13 }}>
+        <Paragraph type="secondary" className="card-note" style={{ margin: 0, fontSize: 13 }}>
           <Text type="secondary" style={{ fontSize: 13 }}>备注 </Text>
           {prompt.note}
         </Paragraph>
