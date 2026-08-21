@@ -263,7 +263,7 @@ app.delete('/api/tags/:id', auth, (req, res) => {
   db.prepare('DELETE FROM tags WHERE id = ? AND user_id = ?').run(id, req.userId);
   // 从当前用户的 prompts 中移除该标签 id
   const prompts = db.prepare('SELECT id, tags FROM prompts WHERE user_id = ?').all(req.userId);
-  const update = db.prepare('UPDATE prompts SET tags = ?, updated_at = datetime("now", "localtime") WHERE id = ? AND user_id = ?');
+  const update = db.prepare("UPDATE prompts SET tags = ?, updated_at = datetime('now', 'localtime') WHERE id = ? AND user_id = ?");
   for (const p of prompts) {
     const ids = JSON.parse(p.tags || '[]').filter((t) => t !== id);
     update.run(JSON.stringify(ids), p.id, req.userId);
@@ -328,7 +328,7 @@ app.delete('/api/models/:id', auth, (req, res) => {
   const row = db.prepare('SELECT id FROM models WHERE id = ? AND user_id = ?').get(id, req.userId);
   if (!row) return res.status(404).json({ error: '模型不存在' });
   db.prepare('DELETE FROM models WHERE id = ? AND user_id = ?').run(id, req.userId);
-  db.prepare('UPDATE prompts SET model_id = NULL, updated_at = datetime("now", "localtime") WHERE model_id = ? AND user_id = ?').run(id, req.userId);
+  db.prepare("UPDATE prompts SET model_id = NULL, updated_at = datetime('now', 'localtime') WHERE model_id = ? AND user_id = ?").run(id, req.userId);
   res.json({ ok: true });
 });
 
@@ -390,7 +390,7 @@ app.delete('/api/sources/:id', auth, (req, res) => {
   if (!row) return res.status(404).json({ error: '来源不存在' });
   db.prepare('DELETE FROM sources WHERE id = ? AND user_id = ?').run(id, req.userId);
   // 引用该来源的 prompts 置空 source_id
-  db.prepare('UPDATE prompts SET source_id = NULL, updated_at = datetime("now", "localtime") WHERE source_id = ? AND user_id = ?').run(id, req.userId);
+  db.prepare("UPDATE prompts SET source_id = NULL, updated_at = datetime('now', 'localtime') WHERE source_id = ? AND user_id = ?").run(id, req.userId);
   res.json({ ok: true });
 });
 
@@ -501,7 +501,7 @@ app.delete('/api/model-refs/:id', auth, (req, res) => {
   db.prepare('DELETE FROM model_refs WHERE id = ? AND user_id = ?').run(id, req.userId);
   // 从当前用户的 prompts 中移除该 model_ref id
   const prompts = db.prepare('SELECT id, model_refs FROM prompts WHERE user_id = ?').all(req.userId);
-  const update = db.prepare('UPDATE prompts SET model_refs = ?, updated_at = datetime("now", "localtime") WHERE id = ? AND user_id = ?');
+  const update = db.prepare("UPDATE prompts SET model_refs = ?, updated_at = datetime('now', 'localtime') WHERE id = ? AND user_id = ?");
   for (const p of prompts) {
     const ids = JSON.parse(p.model_refs || '[]').filter((t) => t !== id);
     update.run(JSON.stringify(ids), p.id, req.userId);

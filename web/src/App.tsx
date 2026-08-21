@@ -36,7 +36,7 @@ function HomePage({ username, onLogout }: { username: string; onLogout: () => vo
   const [error, setError] = useState('');
   const [keyword, setKeyword] = useState('');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('');
-  const [tagFilter, setTagFilter] = useState<number | ''>('');
+  const [tagFilter, setTagFilter] = useState<number[]>([]);
   const [modelFilter, setModelFilter] = useState<number | ''>('');
   const [favOnly, setFavOnly] = useState(false);
   const [promptModal, setPromptModal] = useState<{ editing: Prompt | null } | null>(null);
@@ -125,17 +125,11 @@ function HomePage({ username, onLogout }: { username: string; onLogout: () => vo
       (p) =>
         (typeFilter === '' || p.type === typeFilter) &&
         (!favOnly || p.favorite) &&
-        (tagFilter === '' || p.tags.includes(tagFilter)) &&
+        (tagFilter.length === 0 || p.tags.some((id) => tagFilter.includes(id))) &&
         (modelFilter === '' || p.model_id === modelFilter) &&
-        (!kw ||
-          p.title.toLowerCase().includes(kw) ||
-          p.content.toLowerCase().includes(kw) ||
-          p.note.toLowerCase().includes(kw) ||
-          p.url.toLowerCase().includes(kw) ||
-          p.tags.some((id) => tagMap[id]?.name.toLowerCase().includes(kw)) ||
-          (p.model_id != null && modelMap[p.model_id]?.name.toLowerCase().includes(kw))),
+        (!kw || p.title.toLowerCase().includes(kw) || p.note.toLowerCase().includes(kw)),
     );
-  }, [items, keyword, typeFilter, tagFilter, modelFilter, favOnly, tagMap, modelMap]);
+  }, [items, keyword, typeFilter, tagFilter, modelFilter, favOnly]);
 
   const displayed = useMemo(() => filtered.slice(0, displayCount), [filtered, displayCount]);
   const hasMore = displayed.length < filtered.length;
@@ -241,11 +235,15 @@ function HomePage({ username, onLogout }: { username: string; onLogout: () => vo
                 options={TYPE_OPTIONS}
               />
               <Select
-                style={{ width: 140 }}
-                value={tagFilter || undefined}
-                onChange={(v) => setTagFilter(v ?? '')}
+                mode="multiple"
+                style={{ minWidth: 340, maxWidth: 420 }}
+                value={tagFilter}
+                onChange={setTagFilter}
                 placeholder="全部标签"
                 allowClear
+                showSearch
+                optionFilterProp="label"
+                maxTagCount={3}
                 options={tags.map((t) => ({ label: t.name, value: t.id }))}
               />
               <Select
@@ -265,7 +263,7 @@ function HomePage({ username, onLogout }: { username: string; onLogout: () => vo
               </Button>
               <Input
                 style={{ width: 280 }}
-                placeholder="搜索标题、提示词、备注、标签、模型…"
+                placeholder="搜索标题、备注…"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 allowClear

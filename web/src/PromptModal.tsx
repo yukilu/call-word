@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Modal, Input, Select, Radio, Switch, Button, Space, Typography, App as AntApp } from 'antd';
+import { Modal, Input, Select, Radio, Switch, Button, Space, Tag as AntTag, Typography, App as AntApp } from 'antd';
 import { ExpandAltOutlined, CopyOutlined } from '@ant-design/icons';
 import type { Model, ModelRef, Prompt, PromptInput, PromptType, Source, Tag } from './api';
 import { TYPE_LABELS, copyText } from './utils';
@@ -40,22 +40,25 @@ export function PromptModal({ editing, tags, models, modelRefs, sources, onClose
     setSelectedTags((prev) => (prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]));
   };
 
-  // model 选项：根据所选模型筛选，按下载名称排序
+  // model 选项：须先选择模型，展示该模型关联的资源；未选/清空模型时为空
   const modelRefOptions = useMemo(() => {
-    const list = modelId == null ? modelRefs : modelRefs.filter((r) => r.model_ids.includes(modelId));
+    if (modelId == null) return [];
+    const list = modelRefs.filter((r) => r.model_ids.includes(modelId));
     return [...list]
       .sort((a, b) => (a.download_name || a.name).localeCompare(b.download_name || b.name, 'zh'))
-      .map((r) => ({ label: r.download_name || r.name, value: r.id }));
+      .map((r) => ({ label: r.download_name || r.name, value: r.id, refType: r.ref_type }));
   }, [modelRefs, modelId]);
 
-  // 切换模型时，清掉不属于新模型的已选项
+  // 切换/清空模型时，清掉不属于当前模型的已选项
   const handleModelChange = (v: number | null) => {
     setModelId(v ?? null);
-    if (v != null) {
-      setModelRefIds((prev) =>
-        prev.filter((id) => modelRefs.find((r) => r.id === id)?.model_ids.includes(v)),
-      );
+    if (v == null) {
+      setModelRefIds([]);
+      return;
     }
+    setModelRefIds((prev) =>
+      prev.filter((id) => modelRefs.find((r) => r.id === id)?.model_ids.includes(v)),
+    );
   };
 
   const handleCopy = async () => {
@@ -178,6 +181,14 @@ export function PromptModal({ editing, tags, models, modelRefs, sources, onClose
             showSearch
             optionFilterProp="label"
             options={modelRefOptions}
+            optionRender={(option) => (
+              <Space size={4}>
+                <span>{option.data.label}</span>
+                <AntTag color={option.data.refType === 'checkpoint' ? 'gold' : 'magenta'} style={{ marginRight: 0 }}>
+                  {option.data.refType === 'checkpoint' ? 'Checkpoint' : 'LoRA'}
+                </AntTag>
+              </Space>
+            )}
           />
         </div>
 
